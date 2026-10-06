@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>متجري</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f5f5f5;
+            color: #222;
+        }
+
+        header {
+            background: #111;
+            color: white;
+            text-align: center;
+            padding: 25px 10px;
+        }
+
+        header h1 {
+            font-size: 28px;
+        }
+
+        header p {
+            margin-top: 8px;
+            color: #ccc;
+        }
+
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 30px 15px;
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        .product {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,.08);
+            text-align: center;
+            padding-bottom: 20px;
+        }
+
+        .product img {
+            width: 100%;
+            height: 260px;
+            object-fit: contain;
+            background: #fff;
+        }
+
+        .product h2 {
+            font-size: 20px;
+            margin: 15px 10px 8px;
+        }
+
+        .price {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .order-btn {
+            border: none;
+            background: #25D366;
+            color: white;
+            padding: 13px 35px;
+            border-radius: 30px;
+            font-size: 17px;
+            cursor: pointer;
+        }
+
+        .order-btn:hover {
+            opacity: .9;
+        }
+
+        /* الفورم */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.65);
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+        }
+
+        .form-box {
+            background: white;
+            width: 100%;
+            max-width: 450px;
+            padding: 25px;
+            border-radius: 18px;
+        }
+
+        .form-box h2 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .form-box input,
+        .form-box select {
+            width: 100%;
+            padding: 13px;
+            margin-bottom: 12px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+        }
+
+        .confirm {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            background: #25D366;
+            color: white;
+            font-size: 17px;
+            cursor: pointer;
+        }
+
+        .close {
+            display: block;
+            text-align: center;
+            margin-top: 12px;
+            cursor: pointer;
+            color: #777;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>🛍️ متجري</h1>
+    <p>منتجات مختارة بأفضل الأسعار</p>
+</header>
+
+<section class="products">
+
+    <!-- المنتج الأول -->
+    <div class="product">
+        <img src="images/product1.jpg" alt="Airpods pro Black">
+
+        <h2>Airpods pro Black</h2>
+
+        <div class="price">
+            470 جنيه
+        </div>
+
+        <button class="order-btn"
+                onclick="openOrder('Airpods pro Black', 470)">
+            اطلب الآن
+        </button>
+    </div>
+
+</section>
+
+
+<!-- نافذة الطلب -->
+<div class="modal" id="orderModal">
+
+    <div class="form-box">
+
+        <h2>بيانات الطلب 🛒</h2>
+
+        <input type="text" id="name" placeholder="الاسم بالكامل">
+
+        <input type="tel" id="phone" placeholder="رقم الموبايل">
+
+        <input type="text" id="governorate" placeholder="المحافظة">
+
+        <input type="text" id="address" placeholder="العنوان بالتفصيل">
+
+        <input type="number" id="quantity" value="1" min="1">
+
+        <button class="confirm" onclick="sendOrder()">
+            تأكيد الطلب عبر واتساب 📲
+        </button>
+
+        <span class="close" onclick="closeOrder()">
+            إلغاء
+        </span>
+
+    </div>
+
+</div>
+
+
+<script>
+
+let selectedProduct = "";
+let selectedPrice = 0;
+
+function openOrder(product, price) {
+
+    selectedProduct = product;
+    selectedPrice = price;
+
+    document.getElementById("orderModal").style.display = "flex";
+}
+
+function closeOrder() {
+
+    document.getElementById("orderModal").style.display = "none";
+}
+
+function sendOrder() {
+
+    let name = document.getElementById("name").value;
+    let phone = document.getElementById("phone").value;
+    let governorate = document.getElementById("governorate").value;
+    let address = document.getElementById("address").value;
+    let quantity = document.getElementById("quantity").value;
+
+    if (!name || !phone || !governorate || !address) {
+        alert("من فضلك اكتب كل البيانات");
+        return;
+    }
+
+    let total = selectedPrice * quantity;
+
+    let message =
+`🛒 طلب جديد
+
+📦 المنتج: ${selectedProduct}
+💰 السعر: ${selectedPrice} جنيه
+🔢 الكمية: ${quantity}
+💵 الإجمالي: ${total} جنيه
+
+👤 الاسم: ${name}
+📱 الموبايل: ${phone}
+📍 المحافظة: ${governorate}
+🏠 العنوان: ${address}`;
+
+    let whatsappNumber = "201105850117";
+
+    let whatsappURL =
+        "https://wa.me/" + whatsappNumber +
+        "?text=" + encodeURIComponent(message);
+
+    window.location.href = whatsappURL;
+}
+
+</script>
+
+</body>
+</html>
